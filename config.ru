@@ -1,2 +1,2 @@
-require 'app/euro_livescore'
+require './app/euro_livescore'
 run Sinatra::Application
