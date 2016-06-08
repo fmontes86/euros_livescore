@@ -1,0 +1,4 @@
+# Ignore all logfiles and tempfiles.
+*.sw[a-zA-Z]
+.byebug_history
+.DS_Store
