@@ -20,6 +20,8 @@ client.on :message do |data|
   p data
 end
 
+client.start!
+
 set :fixtures, File.read('./data/fixtures.json')
 set :matches_grouped_by_dates, proc { JSON.parse(settings.fixtures)["fixtures"].group_by{ |u| api_football_date_readable(u["date"]) } }
 
