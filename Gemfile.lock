@@ -1,6 +1,12 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    activesupport (4.2.6)
+      i18n (~> 0.7)
+      json (~> 1.7, >= 1.7.7)
+      minitest (~> 5.1)
+      thread_safe (~> 0.3, >= 0.3.4)
+      tzinfo (~> 1.1)
     daemons (1.2.3)
     domain_name (0.5.20160310)
       unf (>= 0.0.5, < 1.0.0)
@@ -18,8 +24,10 @@ GEM
       websocket-driver (>= 0.5.1)
     http-cookie (1.0.2)
       domain_name (~> 0.5)
+    i18n (0.7.0)
     json (1.8.3)
     mime-types (2.99.2)
+    minitest (5.9.0)
     multi_json (1.12.1)
     multipart-post (2.0.0)
     netrc (0.11.0)
@@ -51,6 +59,8 @@ GEM
     thread (0.2.2)
     thread_safe (0.3.5)
     tilt (2.0.5)
+    tzinfo (1.2.2)
+      thread_safe (~> 0.1)
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.2)
@@ -62,6 +72,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activesupport
   easy_translate
   rest-client
   sinatra
