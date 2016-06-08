@@ -10,17 +10,13 @@ Slack.configure do |config|
 end
 
 client = Slack::RealTime::Client.new
-
 client.on :hello do
   p 'Successfully connected.'
 end
-
 client.on :message do |data|
   # respond to messages
   p data
 end
-
-client.start!
 
 set :fixtures, File.read('./data/fixtures.json')
 set :matches_grouped_by_dates, proc { JSON.parse(settings.fixtures)["fixtures"].group_by{ |u| api_football_date_readable(u["date"]) } }
@@ -39,6 +35,7 @@ post '/auth' do
 end
 
 post "/ask" do
+  client.start!
   OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
   # In the Google Developer Console credentials section: API Key > Server Key 
   # EasyTranslate.api_key = ENV['GOOGLE_API_KEY']
