@@ -2,22 +2,6 @@ require 'sinatra'
 require 'json'
 require 'rest-client'
 require 'easy_translate'
-require 'slack'
-require 'slack-ruby-client'
-
-Slack.configure do |config|
-  config.token = "xoxb-48038287187-q3BAxodjkCsq51AUR9CpenPY"
-end
-
-client = Slack::RealTime::Client.new
-client.start!
-# client.on :hello do
-#   p 'Successfully connected.'
-# end
-# client.on :message do |data|
-#   # respond to messages
-#   p data
-# end
 
 set :fixtures, File.read('./data/fixtures.json')
 set :matches_grouped_by_dates, proc { JSON.parse(settings.fixtures)["fixtures"].group_by{ |u| api_football_date_readable(u["date"]) } }
@@ -59,6 +43,10 @@ post "/ask" do
   text_analyzer(text.downcase)
 end
 
+def post_message(text)
+  RestClient.post('https://slack.com/api/chat.postMessage', :text => text, :token => 'xoxb-48038287187-q3BAxodjkCsq51AUR9CpenPY', :channel => "C1E3RFTJM" )
+end
+
 def slack_date_readable(timestamp)
   Time.at(timestamp).utc
 end
@@ -76,7 +64,7 @@ def text_analyzer(text)
     # today = Time.now.strftime("%F")
     today = "2016-06-10"
     mes = find_match_by(today)
-    client.message channel: "C1E3RFTJM", text: "Hi '#{mes}!'"
+    post_message mes
   end
   # p fixtures_json["fixtures"][0]
   # Have to define what could I analize here
