@@ -15,15 +15,10 @@ get '/test.json' do
   response = RestClient.get 'http://api.football-data.org/v1/soccerseasons/424'
 end
 
-post '/auth' do
-  p "auth"
-  p params
-end
-
 post "/ask" do
   OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
   # In the Google Developer Console credentials section: API Key > Server Key 
-  EasyTranslate.api_key = ENV['GOOGLE_API_KEY']
+  EasyTranslate.api_key = ENV["GOOGLE_API_KEY"]
   splat = translate(params[:text])
   text = if splat[:translate]
             EasyTranslate.translate(params[:text], from: splat[:from], to: splat[:to])
@@ -43,8 +38,8 @@ post "/ask" do
   #   "user_name"=>"felix", 
   #   "text"=>"hola vale!"
   # }
-  p params[:timestamp]
-  text_analyzer(text.downcase)
+
+  text_analyzer(params[:user_id], text.downcase)
 end
 
 def post_to_channel(text, options={})
@@ -67,23 +62,23 @@ def api_football_date_readable(datetime)
   slack_date_readable(timestamp)
 end
 
-def text_analyzer(text)
+def text_analyzer(user_id, text)
   array_words = text.split(" ")
   fixtures_json = JSON.parse(settings.fixtures)
   if array_words.include?("today?") && array_words.include?("playing") || array_words.include?("what") && array_words.include?("scores")
     # today = Time.now.strftime("%F")
     # tomorrow = Time.now + 1.day
     today = "2016-06-11"
-    post_to_channel("This's the scores I've got so far...", { :attachments => format_attachments(find_match_by(today)).to_json })
+    post_to_channel("<@#{user_id}> This's the scores I've got so far...", { :attachments => format_attachments(find_match_by(today)).to_json })
   elsif array_words.include?("tomorrow?") && array_words.include?("play")
     # tomorrow = Time.now + 1.day
     today = "2016-06-12"
-    post_to_channel("This's the scores I've got so far...", { :attachments => format_attachments(find_match_by(today)).to_json })
+    post_to_channel("<@#{user_id}> This's the scores I've got so far...", { :attachments => format_attachments(find_match_by(today)).to_json })
   elsif array_words.include?("week") && array_words.include?("from") && array_words.include?("now?")  
     today = (Time.now + 7.day).strftime("%F")
-    post_to_channel("This's the scores I've got so far...", { :attachments => format_attachments(find_match_by(today)).to_json })
+    post_to_channel("<@#{user_id}> This's the scores I've got so far...", { :attachments => format_attachments(find_match_by(today)).to_json })
   else
-    post_to_channel("Sorry I don't reconigized what are you trying to said :sad_eder: I'm doing my best!")
+    post_to_channel("<@#{user_id}> Sorry I don't reconigized what are you trying to said :sad_eder: I'm doing my best!")
   end
 end
 
