@@ -78,7 +78,7 @@ def format_attachments(content)
   matches = []
   content.each_with_index do |match, index|
     url = match["_links"]["self"]["href"]
-    p res = get_results_from(url).to_json
+    p res = JSON.parse(get_results_from(url))
     p res["fixtures"]["results"]["goalsHomeTeam"]
     p res["fixtures"]["results"]["goalsAwayTeam"]
     matches.push(
