@@ -29,13 +29,11 @@ post "/ask" do
             params[:text]
           end
 
-  p slack_date_readable(params[:timestamp]).strftime("%F")
-
-  if slack_date_readable(params[:timestamp]).strftime("%F") == "2016-06-10"
+  # if slack_date_readable(params[:timestamp]).strftime("%F") == "2016-06-10"
     text_analyzer(params[:user_id], text.downcase)
-  else
-    post_to_channel("<@#{params[:user_id]}> There are no games for today! The Euro's start at 2016-06-10")
-  end
+  # else
+  #   post_to_channel("<@#{params[:user_id]}> There are no games for today! The Euro's start at 2016-06-10")
+  # end
 end
 
 def post_to_channel(text, options={})
@@ -58,10 +56,10 @@ def api_football_date_readable(datetime)
 end
 
 def text_analyzer(user_id, text)
-  p array_words = text.split(" ")
+  array_words = text.split(" ")
+
   if (array_words & settings.today).count > 1
     # today = Time.now.strftime("%F")
-    # tomorrow = Time.now + 1.day
     today = "2016-06-11"
     post_to_channel("<@#{user_id}> This's the scores I've got so far...", { :attachments => format_attachments(find_match_by(today)).to_json })
   elsif (array_words & settings.tomorrow).count > 1
@@ -79,6 +77,9 @@ end
 def format_attachments(content)
   matches = []
   content.each_with_index do |match, index|
+    res = get_results_from(match["_links"]["self"])
+    p res["results"]["goalsHomeTeam"]
+    p res["results"]["goalsAwayTeam"]
     matches.push(
       {
         :text => "Match #{index + 1} - #{api_football_date_readable(match['date']).strftime('%b, %d at %H:%M %z')}",
@@ -100,6 +101,10 @@ def format_attachments(content)
     )
   end
   matches
+end
+
+def get_results_from(url)
+  RestClient.get url
 end
 
 def compare_date(slack_date, api_date)
