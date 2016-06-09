@@ -30,7 +30,7 @@ post "/ask" do
           end
 
   p slack_date_readable(params[:timestamp]).strftime("%F")
-  
+
   if slack_date_readable(params[:timestamp]).strftime("%F") == "2016-06-10"
     text_analyzer(params[:user_id], text.downcase)
   else
@@ -48,7 +48,7 @@ def post_to_channel(text, options={})
 end
 
 def slack_date_readable(timestamp)
-  Time.at(timestamp)
+  Time.at(timestamp.to_i)
 end
 
 def api_football_date_readable(datetime)
