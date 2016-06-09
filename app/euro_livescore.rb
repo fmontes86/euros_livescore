@@ -84,8 +84,8 @@ def format_attachments(content)
         :mrkdwn_in => ["text", "pretext", "fields"],
         :fields => [
           {
-            :title => res["fixture"]['homeTeamName'] || 0,
-            :value => res["fixture"]['goalsHomeTeam'] || 0,
+            :title => res["fixture"]['homeTeamName'],
+            :value => res["fixture"]['awayTeamName'],
             :short => true
           },
           {
