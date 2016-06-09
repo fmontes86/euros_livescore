@@ -32,7 +32,7 @@ post "/ask" do
   if slack_date_readable(params[:timestamp]).strftime("%F") == "2016-06-10"
     text_analyzer(params[:user_id], text.downcase)
   else
-    post_to_channel("<@#{user_id}> There are no games for today! The Euro's start at 2016-06-10")
+    post_to_channel("<@#{params[:user_id]}> There are no games for today! The Euro's start at 2016-06-10")
   end
 end
 
