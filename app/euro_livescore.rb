@@ -78,9 +78,9 @@ def format_attachments(content)
   matches = []
   content.each_with_index do |match, index|
     url = match["_links"]["self"]["href"]
-    p res = get_results_from(url)
-    # p res["results"]["goalsHomeTeam"]
-    # p res["results"]["goalsAwayTeam"]
+    res = get_results_from(url).to_json
+    p res["results"]["goalsHomeTeam"]
+    p res["results"]["goalsAwayTeam"]
     matches.push(
       {
         :text => "Match #{index + 1} - #{api_football_date_readable(match['date']).strftime('%b, %d at %H:%M %z')}",
