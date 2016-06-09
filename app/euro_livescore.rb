@@ -25,20 +25,6 @@ post "/ask" do
           else
             params[:text]
           end
-
-  # {
-  #   "token"=>"dMjCtD6mmN5SbGxUKOGKlFKO", 
-  #   "team_id"=>"T027P7MLU", 
-  #   "team_domain"=>"ableco", 
-  #   "service_id"=>"48122202561", 
-  #   "channel_id"=>"C1E3RFTJM", 
-  #   "channel_name"=>"euros_championship_sc", 
-  #   "timestamp"=>"1465251469.000005", 
-  #   "user_id"=>"U0E595ECA", 
-  #   "user_name"=>"felix", 
-  #   "text"=>"hola vale!"
-  # }
-
   text_analyzer(params[:user_id], text.downcase)
 end
 
@@ -64,6 +50,9 @@ end
 
 def text_analyzer(user_id, text)
   array_words = text.split(" ")
+
+  logger.info array_words
+  
   fixtures_json = JSON.parse(settings.fixtures)
   if array_words.include?("today?") && array_words.include?("playing") || array_words.include?("what") && array_words.include?("scores")
     # today = Time.now.strftime("%F")
