@@ -51,8 +51,8 @@ end
 def text_analyzer(user_id, text)
   array_words = text.split(" ")
 
-  logger.info array_words
-  
+  p array_words
+
   fixtures_json = JSON.parse(settings.fixtures)
   if array_words.include?("today?") && array_words.include?("playing") || array_words.include?("what") && array_words.include?("scores")
     # today = Time.now.strftime("%F")
