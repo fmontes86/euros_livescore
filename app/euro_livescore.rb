@@ -52,7 +52,7 @@ def api_football_date_readable(datetime)
 end
 
 def text_analyzer(user_id, text)
-  array_words = text.split(" ")
+  p array_words = text.split(" ")
   # if array_words.include?("today?") && array_words.include?("playing") || array_words.include?("what") && array_words.include?("scores")
   if (array_words & settings.today).count > 1
     # today = Time.now.strftime("%F")
