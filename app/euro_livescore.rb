@@ -29,6 +29,8 @@ post "/ask" do
             params[:text]
           end
 
+  p slack_date_readable(params[:timestamp]).strftime("%F")
+  
   if slack_date_readable(params[:timestamp]).strftime("%F") == "2016-06-10"
     text_analyzer(params[:user_id], text.downcase)
   else
