@@ -60,24 +60,29 @@ def text_analyzer(user_id, text)
 
   if (array_words & settings.today).count > 1
     # today = Time.now.strftime("%F")
-    today = "2016-06-11"
-    post_to_channel("<@#{user_id}> This's the scores I've got so far...", { :attachments => format_attachments(find_match_by(today)).to_json })
+    today = "2016-06-10"
+    text = "<@#{user_id}> This's the scores I've got so far for today..."
+    attachments = { :attachments => format_attachments(find_match_by(today)).to_json }
   elsif (array_words & settings.tomorrow).count > 1
     # tomorrow = Time.now + 1.day
-    today = "2016-06-12"
-    post_to_channel("<@#{user_id}> This's the scores I've got so far...", { :attachments => format_attachments(find_match_by(today)).to_json })
+    today = "2016-06-11"
+    text = "<@#{user_id}> This's the matches I've got for tomorrow..."
+    attachments = { :attachments => format_attachments(find_match_by(today)).to_json }
   elsif (array_words & settings.week).count > 1
     today = (Time.now + 7.day).strftime("%F")
-    post_to_channel("<@#{user_id}> This's the scores I've got so far...", { :attachments => format_attachments(find_match_by(today)).to_json })
+    text = "<@#{user_id}> This's the matches I've got for next week..."
+    attachments = { :attachments => format_attachments(find_match_by(today)).to_json }
   else
-    post_to_channel("<@#{user_id}> Sorry I don't have enough information to show for now :sad_eder: I'm doing my best!")
+    text = "<@#{user_id}> Sorry I don't have enough information to show for now :sad_eder: I'm doing my best!"
+    attachments = {}
   end
+  post_to_channel(text, attachments)
 end
 
 def format_attachments(content)
   matches = []
   content.each_with_index do |match, index|
-    res = JSON.parse(get_results_from(match["_links"]["self"]["href"]))
+    res = JSON.parse(RestClient.get(match["_links"]["self"]["href"]))
     matches.push(
       {
         :text => "Match #{index + 1} - #{api_football_date_readable(match['date']).strftime('%b, %d at %H:%M %z')}",
@@ -85,11 +90,11 @@ def format_attachments(content)
         :fields => [
           {
             :title => res["fixture"]['homeTeamName'],
-            :value => res["fixture"]["result"]["goalsHomeTeam"],
+            :value => res["fixture"]["result"]["goalsHomeTeam"] || 0,
             :short => true
           },
           {
-            :title => res["fixture"]['awayTeamName'] || 0,
+            :title => res["fixture"]['awayTeamName'],
             :value => res["fixture"]["result"]["goalsAwayTeam"] || 0,
             :short => true
           }
@@ -99,20 +104,6 @@ def format_attachments(content)
     )
   end
   matches
-end
-
-def get_results_from(url)
-  RestClient.get url
-end
-
-def compare_date(slack_date, api_date)
-  if slack_date.strftime("%F") > api_date.strftime("%F")
-    # stuff when its gather
-  elsif slack_date.strftime("%F") < api_date.strftime("%F")
-    # stuff when its lower
-  else
-    # stuff when its equal
-  end
 end
 
 def find_match_by(date)
