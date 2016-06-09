@@ -75,13 +75,14 @@ def text_analyzer(user_id, text)
     text = "<@#{user_id}> This's the matches I've got for next week:"
     attachments = { :attachments => format_attachments(find_match_by(date)).to_json }
   elsif (array_words & settings.dates).count > 1
-    date = array_words.join(" ")[/(\d{4}\-\d{1,2}\-\d{1,2})/]
-    if date > "2016-07-10" || date < "2016-06-10"
-      text = "Sorry, but I couldn't find something related to that date. Remember that I can only search by this format 'YYYY-MM-DD'. Thanks! :happy_gf:"
+    date = array_words.join(" ")[/(\d{1,2}\-\d{1,2})/]
+    real_date = "2016-"+date
+    if real_date > "2016-07-10" || real_date < "2016-06-10"
+      text = "Sorry, but I couldn't find something related to that date. Remember that I can only search by this format 'MM-DD'. Thanks! :happy_gf:"
       attachments = {}
     else
       text = "<@#{user_id}> This's the matches I've got for #{date}:"
-      attachments = { :attachments => format_attachments(find_match_by(date)).to_json }
+      attachments = { :attachments => format_attachments(find_match_by(real_date)).to_json }
     end
   else
     text = "<@#{user_id}> Sorry I don't have enough information to show for now :sad_eder: I'm doing my best!"
