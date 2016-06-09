@@ -6,6 +6,9 @@ require 'active_support/all'
 
 set :fixtures, File.read('./data/fixtures.json')
 set :matches_grouped_by_dates, proc { JSON.parse(settings.fixtures)["fixtures"].group_by{ |u| api_football_date_readable(u["date"]).strftime("%F") } }
+set :today, %w(today? score scores play playing today)
+set :tomorrow, %w(tomorrow tomorrow? play playing who whos)
+set :week, %w(week play playing next week?)
 
 get '/' do
   'Hello world!'
@@ -50,20 +53,17 @@ end
 
 def text_analyzer(user_id, text)
   array_words = text.split(" ")
-
-  p array_words
-
-  fixtures_json = JSON.parse(settings.fixtures)
-  if array_words.include?("today?") && array_words.include?("playing") || array_words.include?("what") && array_words.include?("scores")
+  # if array_words.include?("today?") && array_words.include?("playing") || array_words.include?("what") && array_words.include?("scores")
+  if (array_words & settings.today).count > 1
     # today = Time.now.strftime("%F")
     # tomorrow = Time.now + 1.day
     today = "2016-06-11"
     post_to_channel("<@#{user_id}> This's the scores I've got so far...", { :attachments => format_attachments(find_match_by(today)).to_json })
-  elsif array_words.include?("tomorrow?") && array_words.include?("play")
+  elsif (array_words & settings.tomorrow).count > 1
     # tomorrow = Time.now + 1.day
     today = "2016-06-12"
     post_to_channel("<@#{user_id}> This's the scores I've got so far...", { :attachments => format_attachments(find_match_by(today)).to_json })
-  elsif array_words.include?("week") && array_words.include?("from") && array_words.include?("now?")  
+  elsif (array_words & settings.week).count > 1
     today = (Time.now + 7.day).strftime("%F")
     post_to_channel("<@#{user_id}> This's the scores I've got so far...", { :attachments => format_attachments(find_match_by(today)).to_json })
   else
