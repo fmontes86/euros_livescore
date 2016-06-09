@@ -28,17 +28,21 @@ post "/ask" do
           else
             params[:text]
           end
-  text_analyzer(params[:user_id], text.downcase)
+
+  if slack_date_readable(params[:timestamp]).strftime("%F") == "2016-06-10"
+    text_analyzer(params[:user_id], text.downcase)
+  else
+    post_to_channel("<@#{user_id}> There are no games for today! The Euro's start at 2016-06-10")
+  end
 end
 
 def post_to_channel(text, options={})
   RestClient.post('https://slack.com/api/chat.postMessage',
-                        :token => ENV["SLACK_API_TOKEN"], 
-                        :channel => ENV["CHANNEL_ID"], 
-                        :as_user => true, 
-                        :text => text, 
-                        :attachments => options[:attachments]
-                      )
+                  :token => ENV["SLACK_API_TOKEN"],
+                  :channel => ENV["CHANNEL_ID"],
+                  :as_user => true,
+                  :text => text,
+                  :attachments => options[:attachments])
 end
 
 def slack_date_readable(timestamp)
@@ -53,7 +57,6 @@ end
 
 def text_analyzer(user_id, text)
   p array_words = text.split(" ")
-  # if array_words.include?("today?") && array_words.include?("playing") || array_words.include?("what") && array_words.include?("scores")
   if (array_words & settings.today).count > 1
     # today = Time.now.strftime("%F")
     # tomorrow = Time.now + 1.day
@@ -67,7 +70,7 @@ def text_analyzer(user_id, text)
     today = (Time.now + 7.day).strftime("%F")
     post_to_channel("<@#{user_id}> This's the scores I've got so far...", { :attachments => format_attachments(find_match_by(today)).to_json })
   else
-    post_to_channel("<@#{user_id}> Sorry I don't reconigized what are you trying to said :sad_eder: I'm doing my best!")
+    post_to_channel("<@#{user_id}> Sorry I don't have enough information to show for now :sad_eder: I'm doing my best!")
   end
 end
 
