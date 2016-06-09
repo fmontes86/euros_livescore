@@ -119,7 +119,8 @@ end
 
 def find_match_by(date)
   if settings.matches_grouped_by_dates.has_key?(date)
-    settings.matches_grouped_by_dates.values_at(date).flatten
+    p "group by dates"
+    p settings.matches_grouped_by_dates.values_at(date).flatten
   end
 end
 
