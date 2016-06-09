@@ -77,23 +77,20 @@ end
 def format_attachments(content)
   matches = []
   content.each_with_index do |match, index|
-    url = match["_links"]["self"]["href"]
-    res = JSON.parse(get_results_from(url))
-    p res["fixture"]["result"]["goalsHomeTeam"]
-    p res["fixture"]["result"]["goalsAwayTeam"]
+    res = JSON.parse(get_results_from(match["_links"]["self"]["href"]))
     matches.push(
       {
         :text => "Match #{index + 1} - #{api_football_date_readable(match['date']).strftime('%b, %d at %H:%M %z')}",
         :mrkdwn_in => ["text", "pretext", "fields"],
         :fields => [
           {
-            :title => match['homeTeamName'] || 0,
-            :value => match['goalsHomeTeam'] || 0,
+            :title => res["fixture"]['homeTeamName'] || 0,
+            :value => res["fixture"]['goalsHomeTeam'] || 0,
             :short => true
           },
           {
-            :title => match['awayTeamName'] || 0,
-            :value => match['goalsAwayTeam'] || 0,
+            :title => res["fixture"]["result"]["goalsHomeTeam"] || 0,
+            :value => res["fixture"]["result"]["goalsAwayTeam"] || 0,
             :short => true
           }
         ],
