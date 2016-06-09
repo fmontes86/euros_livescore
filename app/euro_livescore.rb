@@ -85,11 +85,11 @@ def format_attachments(content)
         :fields => [
           {
             :title => res["fixture"]['homeTeamName'],
-            :value => res["fixture"]['awayTeamName'],
+            :value => res["fixture"]["result"]["goalsHomeTeam"],
             :short => true
           },
           {
-            :title => res["fixture"]["result"]["goalsHomeTeam"] || 0,
+            :title => res["fixture"]['awayTeamName'] || 0,
             :value => res["fixture"]["result"]["goalsAwayTeam"] || 0,
             :short => true
           }
