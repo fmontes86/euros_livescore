@@ -6,9 +6,9 @@ require 'active_support/all'
 
 set :fixtures, File.read('./data/fixtures.json')
 set :matches_grouped_by_dates, proc { JSON.parse(settings.fixtures)["fixtures"].group_by{ |u| api_football_date_readable(u["date"]).strftime("%F") } }
-set :today, %w(today? score scores play playing today)
-set :tomorrow, %w(tomorrow tomorrow? play playing who whos)
-set :week, %w(week play playing next week?)
+set :today, %w(what what's is today? score score? scores play playing today)
+set :tomorrow, %w(tomorrow tomorrow? play playing who whos is)
+set :week, %w(who who's is week play playing next week?)
 
 get '/' do
   'Hello world!'
