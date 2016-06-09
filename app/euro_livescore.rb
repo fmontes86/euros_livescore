@@ -77,9 +77,11 @@ end
 def format_attachments(content)
   matches = []
   content.each_with_index do |match, index|
-    res = get_results_from(match["href"])
-    p res["results"]["goalsHomeTeam"]
-    p res["results"]["goalsAwayTeam"]
+    p "match"
+    p match
+    # res = get_results_from(match["href"])
+    # p res["results"]["goalsHomeTeam"]
+    # p res["results"]["goalsAwayTeam"]
     matches.push(
       {
         :text => "Match #{index + 1} - #{api_football_date_readable(match['date']).strftime('%b, %d at %H:%M %z')}",
@@ -119,8 +121,7 @@ end
 
 def find_match_by(date)
   if settings.matches_grouped_by_dates.has_key?(date)
-    p "group by dates"
-    p settings.matches_grouped_by_dates.values_at(date).flatten
+    settings.matches_grouped_by_dates.values_at(date).flatten
   end
 end
 
