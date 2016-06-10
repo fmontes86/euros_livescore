@@ -92,7 +92,7 @@ def format_attachments(content)
       res = JSON.parse(RestClient.get(match["_links"]["self"]["href"]))
       matches.push(
         {
-          :text => "Match #{index + 1} - #{api_football_date_readable(match['date']).strftime('%b, %d at %H:%M %z')}",
+          :text => "Match #{index + 1} - #{api_football_date_readable(match['date']).strftime('%b, %d at %H:%M %z')}. STATUS: #{match['status']}",
           :mrkdwn_in => ["text", "pretext", "fields"],
           :fields => [
             {
