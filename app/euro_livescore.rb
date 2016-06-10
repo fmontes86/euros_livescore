@@ -31,8 +31,6 @@ post "/ask" do
             params[:text]
           end
 
-  p params
-
   text_analyzer(params[:user_id], text.downcase)  
 end
 
