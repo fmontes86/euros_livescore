@@ -36,7 +36,7 @@ end
 
 def post_to_channel(text, options={})
   RestClient.post('https://slack.com/api/chat.postMessage',
-                  :token => ENV["xoxb-48038287187-q3BAxodjkCsq51AUR9CpenPY"],
+                  :token => ENV["SLACK_API_TOKEN"],
                   :channel => ENV["CHANNEL_ID"],
                   :as_user => true,
                   :text => text,
