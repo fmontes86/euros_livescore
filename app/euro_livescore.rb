@@ -31,16 +31,12 @@ post "/ask" do
             params[:text]
           end
 
-  # if slack_date_readable(params[:timestamp]).strftime("%F") == "2016-06-10"
-    text_analyzer(params[:user_id], text.downcase)
-  # else
-  #   post_to_channel("<@#{params[:user_id]}> There are no games for today! The Euro's start at 2016-06-10")
-  # end
+  text_analyzer(params[:user_id], text.downcase)  
 end
 
 def post_to_channel(text, options={})
   RestClient.post('https://slack.com/api/chat.postMessage',
-                  :token => ENV["SLACK_API_TOKEN"],
+                  :token => ENV["xoxb-48038287187-q3BAxodjkCsq51AUR9CpenPY"],
                   :channel => ENV["CHANNEL_ID"],
                   :as_user => true,
                   :text => text,
@@ -54,7 +50,7 @@ end
 def api_football_date_readable(datetime)
   # The date would be giving as string and UTC (2016-06-10T19:00:00Z)
   timestamp = DateTime.rfc3339(datetime).to_time.to_i
-  slack_date_readable(timestamp * 1000)
+  slack_date_readable(timestamp)
 end
 
 def text_analyzer(user_id, text)
@@ -96,7 +92,7 @@ def format_attachments(content)
       res = JSON.parse(RestClient.get(match["_links"]["self"]["href"]))
       matches.push(
         {
-          :text => "Match #{index + 1} - #{api_football_date_readable(match['date']).strftime('%b, %d at %H:%M')}",
+          :text => "Match #{index + 1} - #{api_football_date_readable(match['date']).strftime('%b, %d at %H:%M %z')}",
           :mrkdwn_in => ["text", "pretext", "fields"],
           :fields => [
             {
