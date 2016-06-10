@@ -54,20 +54,18 @@ end
 def api_football_date_readable(datetime)
   # The date would be giving as string and UTC (2016-06-10T19:00:00Z)
   timestamp = DateTime.rfc3339(datetime).to_time.to_i
-  slack_date_readable(timestamp)
+  slack_date_readable(timestamp * 1000)
 end
 
 def text_analyzer(user_id, text)
   array_words = text.split(" ")
 
   if (array_words & settings.today).count > 1
-    # today = Time.now.strftime("%F")
-    date = "2016-06-10"
+    date = Time.now.strftime("%F")
     text = "<@#{user_id}> This's the scores I've got so far for today:"
     attachments = { :attachments => format_attachments(find_match_by(date)).to_json }
   elsif (array_words & settings.tomorrow).count > 1
-    # tomorrow = Time.now + 1.day
-    date = "2016-06-11"
+    date = (Time.now + 1.day).strftime("%F")
     text = "<@#{user_id}> This's the matches I've got for tomorrow:"
     attachments = { :attachments => format_attachments(find_match_by(date)).to_json }
   elsif (array_words & settings.week).count > 1
@@ -98,7 +96,7 @@ def format_attachments(content)
       res = JSON.parse(RestClient.get(match["_links"]["self"]["href"]))
       matches.push(
         {
-          :text => "Match #{index + 1} - #{api_football_date_readable(match['date']).strftime('%b, %d at %H:%M %z')}",
+          :text => "Match #{index + 1} - #{api_football_date_readable(match['date']).strftime('%b, %d at %H:%M')}",
           :mrkdwn_in => ["text", "pretext", "fields"],
           :fields => [
             {
